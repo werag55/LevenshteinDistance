@@ -1,0 +1,124 @@
+#include "SequentialAlgorithm.h"
+#include <iostream>
+
+SequentialAlgorithm::SequentialAlgorithm(int k)
+{}
+
+int minimum(int a, int b, int c, char* t)
+{
+	int min = a;
+	*t = 's';
+
+	if (b < min)
+	{
+		min = b;
+		*t = 'i';
+	}
+
+	if (c < min)
+	{
+		min = c;
+		*t = 'd';
+	}
+
+	return min;
+}
+
+int SequentialAlgorithm::LevenstheinDistance(string s, string t)
+{
+	char transform;
+	int d;
+	int m = s.size(), n = t.size();
+
+	int** distance = new int* [m + 1];
+	for (int i = 0; i <= m; i++)
+	{
+		distance[i] = new int[n + 1];
+		/*for (int j = 0; j <= n; j++)
+			distance[i][j] = 0;*/
+	}
+
+	char** transformations = new char* [m + 1];
+	for (int i = 0; i <= m; i++)
+		transformations[i] = new char[n + 1];
+
+	for (int i = 0; i <= m; i++)
+	{
+		distance[i][0] = i;
+		transformations[i][0] = 'd';
+	}
+
+	for (int j = 1; j <= n; j++)
+	{
+		distance[0][j] = j;
+		transformations[0][j] = 'i';
+	}
+
+	transformations[0][0] = 'x';
+
+	for (int j = 1; j <= n; j++)
+	{
+		for (int i = 1; i <= m; i++)
+		{
+			int notMatching = s[i - 1] == t[j - 1] ? 0 : 1;
+
+			distance[i][j] = minimum(distance[i - 1][j - 1] + notMatching, // substitution
+									 distance[i][j - 1] + 1,			   // insertion
+									 distance[i - 1][j] + 1,               // deletion
+									 &transform);
+
+			if (transform == 's' && notMatching == 0)
+				transform = '-';
+
+			transformations[i][j] = transform;
+		}
+	}
+
+	for (int i = 0; i <= m; i++)
+	{
+		for (int j = 0; j <= n; j++)
+			cout << distance[i][j] << " ";
+		cout << endl;
+	}
+	cout << endl << endl;
+
+	for (int i = 0; i <= m; i++)
+	{
+		for (int j = 0; j <= n; j++)
+			cout << transformations[i][j] << " ";
+		cout << endl;
+	}
+	cout << endl << endl;
+
+	string path = "";
+	int i = m, j = n; 
+	while (transformations[i][j] != 'x')
+	{
+		string k(1, transformations[i][j]);
+		path.append(k);
+		cout << transformations[i][j] << " ";
+		switch (transformations[i][j])
+		{
+		case 'd':
+			i--;
+			break;
+		case 'i':
+			j--;
+			break;
+		default:
+			i--; j--;
+			break;
+		}
+	}
+	reverse(path.begin(), path.end());
+	cout << "\n" << path;
+	cout << endl << endl;
+
+	d = distance[m][n];
+
+	for (int i = 0; i < m; i++)
+		delete[] distance[i];
+
+	delete[] distance;
+	return d;
+}
