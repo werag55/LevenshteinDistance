@@ -26,5 +26,13 @@
     <ClInclude Include="SequentialAlgorithm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CudaAlgorithm.cuh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="CudaAlgorithm.cu">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>

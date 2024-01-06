@@ -23,7 +23,11 @@
     <ClCompile Include="SequentialAlgorithm.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CudaAlgorithm.cuh" />
     <ClInclude Include="SequentialAlgorithm.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="CudaAlgorithm.cu" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
