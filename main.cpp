@@ -9,6 +9,6 @@ int main()
 	//std::cout << d;
 
 	CudaAlgorithm cudaAlg;
-	int d = cudaAlg.LevenstheinDistance("kitten", "CATGACTG");
+	int d = cudaAlg.LevenstheinDistance("sitting", "kitten");
 	std::cout << d;
 }

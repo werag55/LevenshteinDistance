@@ -37,6 +37,87 @@ __global__ void ComputeX(int* d_X, char* d_Q, int q, char* d_t, int n)
     }
 }
 
+__device__ int cudaMinimum(int a, int b, int c)
+{
+    int min = a;
+
+    if (b < min)
+        min = b;
+
+    if (c < min)
+        min = c;
+
+    return min;
+}
+
+__global__ void computeD(int* d_D, int* d_X, char* d_s, int m, char* d_t, int n, int w)
+{
+    int j = threadIdx.x;
+    if (j > n)
+        return;
+
+    int Dvar, Avar, Bvar, Cvar;
+
+    Dvar = j;
+    d_D[j] = Dvar;
+    //__syncthreads();
+
+    for (int i = 1; i <= m; i++)
+    {
+        __syncthreads();
+        if (j % w == 0 && j != 0)
+        {
+            Avar = d_D[(i - 1) * (n + 1) + j - 1];
+            if (j == 1)
+                printf("Pierwszy if\n");
+        }
+        //else //if (j != 0)
+        //{
+            Avar = __shfl_up(Dvar, 1);
+            if (j == 1)
+                printf("Drugi if Avar = %d\n", Avar);
+        //}
+        __syncthreads();
+
+        if (j == 0)
+            Dvar = i;
+
+        else
+        {
+            /*if (j % w == 0)
+                Avar = d_D[(i - 1) * (n + 1) + j - 1];
+            else
+                Avar = __shfl_up(Dvar, 1);*/
+
+            if (d_t[j - 1] == d_s[i - 1])
+                Dvar = Avar;
+
+            else
+            {
+                int l = d_s[i - 1] - 'a';
+                int x = d_X[l * (n + 1) + j];
+                Bvar = Dvar;
+
+                if (x == 0)
+                    Dvar = 1 + cudaMinimum(Avar, Bvar, i + j - 1);
+                else
+                {
+                    Cvar = d_D[(i - 1) * (n + 1) + x - 1];
+                    Dvar = 1 + cudaMinimum(Avar, Bvar, Cvar + (j - 1 - x));
+                }
+            }
+
+
+        }
+
+        printf("i = %d, j = %d, Avar = %d, Bvar = %d, Cvar = %d, Dvar = %d \n",
+            i, j, Avar, Bvar, Cvar, Dvar);
+
+        d_D[i * (n + 1) + j] = Dvar;
+    }
+
+}
+
 void printArray(int* array, int m, int n)
 {
     for (int i = 0; i < m; i++)
@@ -46,19 +127,6 @@ void printArray(int* array, int m, int n)
         cout << endl;
     }
     cout << endl <<endl;
-}
-
-__device__ int cudaMinimum(int a, int b, int c, char* t)
-{
-	int min = a;
-
-	if (b < min)
-		min = b;
-
-	if (c < min)
-		min = c;
-
-	return min;
 }
 
 int CudaAlgorithm::LevenstheinDistance(string s, string t)
@@ -82,8 +150,10 @@ int CudaAlgorithm::LevenstheinDistance(string s, string t)
     //cudaMemcpy(h_X, d_X, q * (n + 1) * sizeof(int), cudaMemcpyDeviceToHost);
 
     //printArray(h_X, q, n + 1);
-
-
+    computeD<<<1,n+1>>>(d_D, d_X, d_s, m, d_t, n, w);
+    int* h_D = new int[(m + 1) * (n + 1) * sizeof(int)];
+    cudaMemcpy(h_D, d_D, (m + 1) * (n + 1) * sizeof(int), cudaMemcpyDeviceToHost);
+    printArray(h_D, m + 1, n + 1);
 
     return 0;
 }
