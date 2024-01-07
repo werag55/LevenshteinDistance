@@ -6,6 +6,6 @@ using namespace std;
 class SequentialAlgorithm
 {
 public:
-	SequentialAlgorithm(int k);
-	int LevenstheinDistance(string s, string t);
+	SequentialAlgorithm();
+	int LevenstheinDistance(string s, string t, string* transformPath);
 };

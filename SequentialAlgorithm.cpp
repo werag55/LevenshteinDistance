@@ -1,7 +1,7 @@
 #include "SequentialAlgorithm.h"
 #include <iostream>
 
-SequentialAlgorithm::SequentialAlgorithm(int k)
+SequentialAlgorithm::SequentialAlgorithm()
 {}
 
 int minimum(int a, int b, int c, char* t)
@@ -32,7 +32,6 @@ string RetrieveTransformations(char** transformations, int m, int n)
 	{
 		string k(1, transformations[i][j]);
 		path.append(k);
-		cout << transformations[i][j] << " ";
 		switch (transformations[i][j])
 		{
 		case 'd':
@@ -50,7 +49,7 @@ string RetrieveTransformations(char** transformations, int m, int n)
 	return path;
 }
 
-int SequentialAlgorithm::LevenstheinDistance(string s, string t)
+int SequentialAlgorithm::LevenstheinDistance(string s, string t, string* transformPath)
 {
 	char transform;
 	int d;
@@ -110,10 +109,7 @@ int SequentialAlgorithm::LevenstheinDistance(string s, string t)
 	}
 	cout << endl << endl;
 
-	string path = RetrieveTransformations(transformations, m, n);
-	cout << "\n" << path;
-	cout << endl << endl;
-
+	*transformPath = RetrieveTransformations(transformations, m, n);
 	d = distance[m][n];
 
 	for (int i = 0; i < m; i++)

@@ -125,6 +125,31 @@ __global__ void ComputeD(int* d_D, char* d_T, int* d_X,
 
 }
 
+string CudaRetrieveTransformations(char* transformations, int m, int n)
+{
+    string path = "";
+    int i = m, j = n;
+    while (i > 0 && j > 0)
+    {
+        string k(1, transformations[i * (n + 1) + j]);
+        path.append(k);
+        switch (transformations[i * (n + 1) + j])
+        {
+        case 'd':
+            i--;
+            break;
+        case 'i':
+            j--;
+            break;
+        default:
+            i--; j--;
+            break;
+        }
+    }
+    reverse(path.begin(), path.end());
+    return path;
+}
+
 void printArray(int* array, int m, int n)
 {
     for (int i = 0; i < m; i++)
@@ -147,7 +172,7 @@ void printArray(char* array, int m, int n)
     cout << endl << endl;
 }
 
-int CudaAlgorithm::LevenstheinDistance(string s, string t)
+int CudaAlgorithm::LevenstheinDistance(string s, string t, string* transformPath)
 {
     transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return tolower(c); });
     transform(t.begin(), t.end(), t.begin(), [](unsigned char c) { return tolower(c); });
@@ -180,6 +205,7 @@ int CudaAlgorithm::LevenstheinDistance(string s, string t)
 
     char* h_T = new char[(m + 1) * (n + 1) * sizeof(char)];
     cudaMemcpy(h_T, d_T, (m + 1) * (n + 1) * sizeof(char), cudaMemcpyDeviceToHost);
+    *transformPath = CudaRetrieveTransformations(h_T, m, n);
     printArray(h_T, m + 1, n + 1);
 
     cudaFree(d_T);

@@ -26,5 +26,5 @@ class CudaAlgorithm
 public:
 	CudaAlgorithm();
 	~CudaAlgorithm();
-	int LevenstheinDistance(string s, string t);
+	int LevenstheinDistance(string s, string t, string* transformPath);
 };
