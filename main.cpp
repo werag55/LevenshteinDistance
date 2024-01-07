@@ -2,13 +2,16 @@
 #include "CudaAlgorithm.cuh"
 #include <iostream>
 
-int main()
+int main(int argc, char* argv[])
 {
-	//SequentialAlgorithm seqAlg(2);
-	//int d = seqAlg.LevenstheinDistance("kitten", "sitting");
-	//std::cout << d;
+	string s = "sitting", t = "kitten";
+
+
+	SequentialAlgorithm seqAlg(2);
+	int d = seqAlg.LevenstheinDistance(s, t);
+	std::cout << d <<endl <<endl;
 
 	CudaAlgorithm cudaAlg;
-	int d = cudaAlg.LevenstheinDistance("sitting", "kitten");
-	std::cout << d;
+	int dc = cudaAlg.LevenstheinDistance(s, t);
+	std::cout << dc;
 }

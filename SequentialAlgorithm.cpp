@@ -24,6 +24,32 @@ int minimum(int a, int b, int c, char* t)
 	return min;
 }
 
+string RetrieveTransformations(char** transformations, int m, int n)
+{
+	string path = "";
+	int i = m, j = n;
+	while (i > 0 && j > 0)
+	{
+		string k(1, transformations[i][j]);
+		path.append(k);
+		cout << transformations[i][j] << " ";
+		switch (transformations[i][j])
+		{
+		case 'd':
+			i--;
+			break;
+		case 'i':
+			j--;
+			break;
+		default:
+			i--; j--;
+			break;
+		}
+	}
+	reverse(path.begin(), path.end());
+	return path;
+}
+
 int SequentialAlgorithm::LevenstheinDistance(string s, string t)
 {
 	char transform;
@@ -31,16 +57,12 @@ int SequentialAlgorithm::LevenstheinDistance(string s, string t)
 	int m = s.size(), n = t.size();
 
 	int** distance = new int* [m + 1];
+	char** transformations = new char* [m + 1];
 	for (int i = 0; i <= m; i++)
 	{
 		distance[i] = new int[n + 1];
-		/*for (int j = 0; j <= n; j++)
-			distance[i][j] = 0;*/
-	}
-
-	char** transformations = new char* [m + 1];
-	for (int i = 0; i <= m; i++)
 		transformations[i] = new char[n + 1];
+	}		
 
 	for (int i = 0; i <= m; i++)
 	{
@@ -53,8 +75,6 @@ int SequentialAlgorithm::LevenstheinDistance(string s, string t)
 		distance[0][j] = j;
 		transformations[0][j] = 'i';
 	}
-
-	transformations[0][0] = 'x';
 
 	for (int j = 1; j <= n; j++)
 	{
@@ -90,35 +110,19 @@ int SequentialAlgorithm::LevenstheinDistance(string s, string t)
 	}
 	cout << endl << endl;
 
-	string path = "";
-	int i = m, j = n; 
-	while (transformations[i][j] != 'x')
-	{
-		string k(1, transformations[i][j]);
-		path.append(k);
-		cout << transformations[i][j] << " ";
-		switch (transformations[i][j])
-		{
-		case 'd':
-			i--;
-			break;
-		case 'i':
-			j--;
-			break;
-		default:
-			i--; j--;
-			break;
-		}
-	}
-	reverse(path.begin(), path.end());
+	string path = RetrieveTransformations(transformations, m, n);
 	cout << "\n" << path;
 	cout << endl << endl;
 
 	d = distance[m][n];
 
 	for (int i = 0; i < m; i++)
+	{
 		delete[] distance[i];
-
+		delete[] transformations[i];
+	}
 	delete[] distance;
+	delete[] transformations;
+
 	return d;
 }

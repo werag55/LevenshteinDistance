@@ -22,7 +22,9 @@ class CudaAlgorithm
 
 	int* d_X;
 	int* d_D;
+	char* d_T;
 public:
 	CudaAlgorithm();
+	~CudaAlgorithm();
 	int LevenstheinDistance(string s, string t);
 };
