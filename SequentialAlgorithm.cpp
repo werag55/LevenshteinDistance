@@ -93,21 +93,39 @@ int SequentialAlgorithm::LevenstheinDistance(string s, string t, string* transfo
 		}
 	}
 
+	/*cout << "    ";
+	for (int j = 0; j < n; j++)
+		cout << t[j] << " ";
+	cout << endl;
 	for (int i = 0; i <= m; i++)
 	{
+		if (i == 0)
+			cout << "  ";
+		else
+			cout << s[i - 1] << " ";
+
 		for (int j = 0; j <= n; j++)
 			cout << distance[i][j] << " ";
 		cout << endl;
 	}
 	cout << endl << endl;
 
+	cout << "    ";
+	for (int j = 0; j < n; j++)
+		cout << t[j] << " ";
+	cout << endl;
 	for (int i = 0; i <= m; i++)
 	{
+		if (i == 0)
+			cout << "  ";
+		else
+			cout << s[i - 1] << " ";
+
 		for (int j = 0; j <= n; j++)
 			cout << transformations[i][j] << " ";
 		cout << endl;
 	}
-	cout << endl << endl;
+	cout << endl << endl;*/
 
 	*transformPath = RetrieveTransformations(transformations, m, n);
 	d = distance[m][n];
